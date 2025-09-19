@@ -14,6 +14,8 @@ export const GET = async (request: Request) => {
       status: 200,
     });
   } catch (error) {
+    // TODO: Log error to a central logging service
+    console.error(error);
     return new Response(null, { status: 500 });
   }
 };

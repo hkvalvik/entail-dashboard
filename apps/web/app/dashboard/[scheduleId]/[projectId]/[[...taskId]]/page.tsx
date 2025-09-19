@@ -78,38 +78,33 @@ const Dashboard = ({
   currentTask,
   executableTasks,
   weather,
-}: DashboardProps) => {
-  const forecast = weather.forecast.find(
-    (forecast) => forecast.timestamp === currentTask?.startDate
-  );
-  return (
-    <DashboardLayout
-      timeline={
-        <Timeline
-          items={project.tasks}
-          renderItem={(task) => (
-            <TimelineItem
-              isActive={task.id === currentTask?.id}
-              title={task.name}
-              status={executableTasks.includes(task.id) ? "go" : "no-go"}
-              details={[
-                ["Level", task.level.toString()],
-                ["Duration", task.duration.toString()],
-                ["Weather limits Hs", task.weatherLimits.Hs.toString()],
-                ["Weather limits Tp", task.weatherLimits.Tp.toString()],
-              ]}
-              startDate={new Date(task.startDate)}
-              endDate={new Date(task.endDate)}
-              href={`/dashboard/${schedule.id}/${project.id}/${task.id}`}
-              buttonComponent={Link}
-            />
-          )}
-        />
-      }
-      visualization={<Visualization currentTaskId={currentTask?.id} />}
-      weather={
-        <Weather location={weather.location} forecasts={weather.forecast} />
-      }
-    />
-  );
-};
+}: DashboardProps) => (
+  <DashboardLayout
+    timeline={
+      <Timeline
+        items={project.tasks}
+        renderItem={(task) => (
+          <TimelineItem
+            isActive={task.id === currentTask?.id}
+            title={task.name}
+            status={executableTasks.includes(task.id) ? "go" : "no-go"}
+            details={[
+              ["Level", task.level.toString()],
+              ["Duration", task.duration.toString()],
+              ["Weather limits Hs", task.weatherLimits.Hs.toString()],
+              ["Weather limits Tp", task.weatherLimits.Tp.toString()],
+            ]}
+            startDate={new Date(task.startDate)}
+            endDate={new Date(task.endDate)}
+            href={`/dashboard/${schedule.id}/${project.id}/${task.id}`}
+            buttonComponent={Link}
+          />
+        )}
+      />
+    }
+    visualization={<Visualization currentTaskId={currentTask?.id} />}
+    weather={
+      <Weather location={weather.location} forecasts={weather.forecast} />
+    }
+  />
+);

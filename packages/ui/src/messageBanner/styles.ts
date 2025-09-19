@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { theme } from "../theme";
 
-export type Variant = "error" | "info";
+type Variant = "error" | "info";
 
 const variants = {
   error: {

@@ -6,7 +6,7 @@ export interface ApiContextProps {
   addError: (error: ApiError) => void;
 }
 
-export const defaults: ApiContextProps = {
+const defaults: ApiContextProps = {
   errors: [],
   addError: () => undefined,
 };

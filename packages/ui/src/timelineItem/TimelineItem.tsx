@@ -69,7 +69,11 @@ export const TimelineItem = ({
               href={href}
               aria-current={isActive ? "page" : undefined}
               variant={isActive ? "outlined" : "outlined"}
-              sx={{ borderColor: isActive ? "transparent" : undefined }}
+              sx={{
+                borderColor: isActive ? "transparent" : undefined,
+
+                backgroundColor: isActive ? undefined : "white",
+              }}
             >
               {title}
             </Button>
