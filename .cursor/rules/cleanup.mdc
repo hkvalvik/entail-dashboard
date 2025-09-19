@@ -1,0 +1,118 @@
+---
+description: Clean up code and improve readability for TypeScript/TSX files
+globs: ["**/*.{ts,tsx}"]
+alwaysApply: false
+---
+
+## Code Cleanup & Readability Rules
+
+Clean up and improve readability according to the rules below.
+
+**Core Principles:**
+- Do not change the functionality of the code
+- Do not add additional error handling or logging
+- Focus on readability, maintainability, and modern best practices
+
+## Function & Component Structure
+
+### **Early Returns & Guard Clauses**
+- Use early returns whenever possible to reduce nesting and improve readability
+- Implement guard clauses at the beginning of functions to handle edge cases first
+
+### **Naming Conventions**
+- Use descriptive variable and function names that clearly express their purpose
+- Event handlers should use "handle" prefix: `handleClick`, `handleKeyDown`, `handleSubmit`
+- Boolean variables should be questions: `isVisible`, `hasError`, `canSubmit`
+- Constants should be camelCase
+- Avoid abbreviations
+
+### **Function Declarations**
+- Prefer `const` arrow functions over function declarations: `const toggle = () => {}`
+- Let TypeScript infer return types when they're obvious
+- Only add explicit return types for complex functions or public APIs
+- Avoid abbreviations in arguments
+```tsx
+// ✅ Preferred
+const handleClick = (event: Event) => {};
+
+// ❌ Avoid for simple components
+const handleClick = (e: Event) => {};
+
+## React Component Best Practices
+
+### **Component Syntax**
+- Use implicit return for simple components without the `return` keyword:
+```tsx
+// ✅ Preferred
+const Component = () => <div>Component</div>;
+
+// ❌ Avoid for simple components
+const Component = () => {
+  return <div>Component</div>;
+};
+```
+
+- Keep components concise and focused on a single responsibility
+- Extract complex logic into custom hooks or utility functions
+- Use destructured imports.
+```tsx
+// ✅ Preferred
+import { useState } from "react";
+
+// ❌ Avoid for simple components
+import React from "react";
+
+React.useState();
+```
+
+### **Accessibility & UX**
+- Implement proper accessibility features: `tabIndex`, `aria-label`, `role`
+- Ensure keyboard navigation works: `onClick`, `onKeyDown` for interactive elements
+- Use semantic HTML elements over generic divs when possible
+- Provide meaningful alt text for images
+
+## TypeScript & Modern JavaScript
+
+### **Type Safety**
+- Prefer type inference over explicit types when the type is obvious
+- Use `as const` for readonly arrays and objects
+- Avoid `any` - use `unknown` or proper types instead
+- Leverage union types and discriminated unions for better type safety
+
+### **Modern Features**
+- Use optional chaining (`?.`) and nullish coalescing (`??`) over logical operators
+- Prefer array methods over for loops: `map`, `filter`, `reduce`, `find`
+- Use destructuring for function parameters and object properties
+- Use template literals over string concatenation
+
+### **Performance Optimization**
+- Use `React.memo()` for components that re-render frequently
+- Implement `useCallback` and `useMemo` with proper dependency arrays
+- Avoid inline object/function creation in render
+- Use `useId()` for generating unique IDs instead of `Math.random()`
+
+## Code Organization
+
+### **Imports & Structure**
+- Group imports logically: React, third-party libraries, local modules
+- Sort imports alphabetically within groups
+- Use barrel exports for cleaner import statements
+- Keep functions under 20 lines - extract complex logic to separate functions
+
+### **Comments & Documentation**
+- Avoid comments unless absolutely necessary to explain complex business logic
+- Prefer self-documenting code through clear naming and structure
+- Do not add JSDoc comments
+- Remove commented-out code and TODO comments that are older than a week
+
+## Testing & Maintainability
+
+### **Testability**
+- Make components easily testable by accepting props for dependencies
+- Use `data-testid` attributes for testing complex components
+- Avoid testing implementation details, focus on behavior and user interactions
+
+### **Error Handling**
+- Use optional chaining for nested object access
+- Implement proper error boundaries for React components
+- Use TypeScript's strict mode features effectively

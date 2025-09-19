@@ -1,0 +1,11 @@
+{
+  "ignore": ["**/dist/**", "**/*.d.ts"],
+  "workspaces": {
+    "apps/web": {
+      "entry": ["eslint.config.js"]
+    },
+    "packages/ui": {
+      "ignore": ["turbo/generators/**"]
+    }
+  }
+}

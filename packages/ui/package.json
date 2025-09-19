@@ -1,0 +1,30 @@
+{
+  "name": "@repo/ui",
+  "description": "Generic UI components",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "generate:component": "turbo gen react-component",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.1.0",
+    "eslint": "^9.27.0",
+    "typescript": "5.8.2"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.14.1",
+    "@fontsource-variable/roboto": "^5.2.6",
+    "@mui/icons-material": "^7.3.2",
+    "@mui/material": "^7.3.1",
+    "date-fns": "^4.1.0",
+    "react": "^19.1.0"
+  }
+}

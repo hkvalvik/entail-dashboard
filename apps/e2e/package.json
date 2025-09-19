@@ -1,0 +1,21 @@
+{
+  "name": "e2e",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "e2e": "playwright test",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.42.1",
+    "@repo/e2e-utils": "*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/node": "^22.15.3",
+    "eslint": "^9.27.0",
+    "typescript": "5.8.2"
+  }
+}
