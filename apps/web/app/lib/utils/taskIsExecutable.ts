@@ -4,19 +4,28 @@ import { Weather } from "../../apiTypes/weather";
 import { conditionsAreAcceptable } from "./conditionsAreAcceptable";
 
 export const taskIsExecutable = (task: ScheduleTask, weather: Weather) => {
-  const forecast = weather.forecast.find(({ timestamp }) =>
-    isWithinInterval(new Date(timestamp), {
-      start: new Date(task.startDate),
-      end: new Date(task.endDate),
-    })
-  );
+  const forecast = getForecastForTask(task, weather);
   if (!forecast) return false;
-  const [tpA, tpB] = task.weatherLimits.Tp;
-  if (!tpA || !tpB) return false;
+
+  const [minPeakPeriod, maxPeakPeriod] = task.weatherLimits.Tp;
+  if (!minPeakPeriod || !maxPeakPeriod) return false;
+
   return conditionsAreAcceptable({
-    hs: task.weatherLimits.Hs,
-    tp: [tpA, tpB],
+    significantWaveHeigh: task.weatherLimits.Hs,
+    minPeakPeriod,
+    maxPeakPeriod,
     waveHeight: forecast.wave_height,
     wavePeriod: forecast.wave_period,
   });
 };
+
+const getForecastForTask = (task: ScheduleTask, weather: Weather) =>
+  weather.forecast.find(({ timestamp }) =>
+    timestampIsWithinTask(timestamp, task)
+  );
+
+const timestampIsWithinTask = (timestamp: string, task: ScheduleTask) =>
+  isWithinInterval(timestamp, {
+    start: new Date(task.startDate),
+    end: new Date(task.endDate),
+  });
