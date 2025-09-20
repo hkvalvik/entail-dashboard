@@ -1,15 +1,23 @@
 # Entail Dashboard
 
-Prototype for a dashboard with mock data.
+Prototype for a dashboard with mocked datasets
 
 ## Architecture notes
 
-**Data layer**: Fetches and manipulates data. Error handling is currently done through a React Context but should be replaced with a more robust system.  
-See the [back-end API](apps/web/app/api) and [front-end API](apps/web/app/apiClient). In production, authentication and integration with internal services would be handled by the back end.
+**Data layer**: Fetches and manipulates data, joins data from different sources.
 
-**Compositional layer**: Connects data to the UI. Currently implemented directly in [the dashboard page](apps/web/app/dashboard/[scheduleId]/[projectId]/[[...taskId]]/page.tsx). As the app grows, a dedicated layer of stateful components should be introduced.
+* See the [back-end API](apps/web/app/api) and the [front-end API](apps/web/app/apiClient).
+* Includes a simple setup for showing error messages.
 
-**UI layer**: Provided by [@repo/ui](packages/ui/), using [MUI](https://mui.com/material-ui). Depending on future requirements, external UI libraries may or may not be used. UI components should remain reusable and encapsulated.
+**Compositional layer**: Connects UI with data.
+
+* Currently implemented directly in [the dashboard page](apps/web/app/dashboard/[scheduleId]/[projectId]/[[...taskId]]/page.tsx).
+* A dedicated layer of stateful components should be introduced.
+
+**UI layer**: Presentational components.
+
+* Provided by [@repo/ui](packages/ui/), using [MUI](https://mui.com/material-ui).
+* All CSS comes from this package. Depending on future requirements, external UI libraries may or may not be used.
 
 ## Getting started
 
@@ -32,61 +40,72 @@ yarn check-types
 
 ## Assumptions
 
-* Fetching data is fast (no long-running tasks)
-* Next.js with a thin back end is used; a secure BFF would be needed in production
-* Offline access is out of scope
+* Fetching data is fast (no long-running tasks).
+* Offline access is out of scope.
+* I have named the dataset containing the tasks a `schedule`.
+* The implementation does not take latitude and longitude into account.
+* Dates in the `schedule` and `weather` datasets do not overlap. I have made small adjustments to the mock data to demonstrate the go-indicator.
 
-## Future improvements
+## Future improvements and features
 
-#### State management
+### State management
 
-* **URL state**: Continue persisting view state across reloads.
-* **Front-end cache**: Already handled by React Query. Useful for syncing, loading/error states, optimistic updates, polling.
-Data can be stored in IndexedDB to prevent memory and performance issues.
-* **In-memory state**: For elements like modals, toasts, joyrides, sidebars and animations. `localStorage` and `sessionStorage` can be used for persistence.
+* **URL state**: Expand the URL with more fragments and parameters for persistent view states across reloads.
+* **State from React Query**: Provides loading/error states when syncing data. Can be used as an alternative to other state management solutions when performing optimistic updates. Storing data in IndexedDB helps prevent memory and performance issues caused by in-memory state.
+* **In-memory state**: For features like modals, toasts, joyrides, sidebars and animations. `localStorage` and `sessionStorage` can be used for persistence.
 Implement Redux or a similar pattern/library and organize into well-defined slices.
 
-## Reusability
+### Reusability
 
-The monorepo setup already supports isolation and reuse. Further steps:
+The monorepo setup is a good foundation for reusability (and scalability). Further steps:
 
 * Utility package for generic functions
-* Utility package for business logic. Move [apps/web/app/lib/utils](/apps/web/app/lib/utils) to this package
-* Larger packages for features (e.g., weather widget, authentication, notifications)
-* Introduce more apps if Entail expands into multiple products
+* Utility package for business logic. Move [apps/web/app/lib/utils](/apps/web/app/lib/utils) to this package.
+* Packages for larger features (e.g., a weather widget, authentication, notifications).
+* Introduce more apps if Entail expands into multiple products. A future app can then be built on top of the existing packages.
 
-## Testability
+### Testability
 
-* Integration: Playwright for end-to-end testing, with a shared [@repo/e2e-utils](packages/e2e-utils/) package for stable HTML selectors
-* Edge cases: Mock API responses and error states. Create a small system for this that does not require too much maintenance
-* Unit tests: For utilities and logic. A lighter test runner may be better than Playwright for running these
+* **Integration**: Playwright for end-to-end testing, with a shared [@repo/e2e-utils](packages/e2e-utils/) package for stable HTML selectors.
+* **Edge cases**: Create a small system for mocking API responses and errors. Keep it lightweight to prevent unnecessary maintenance.
+* **Unit tests**: For utilities and logic. A lighter test runner will be better than Playwright for running these as a background task during development.
 
-## Performance
+### Performance
 
-* Large datasets: Use pagination and a robust URL structure. GraphQL or targeted endpoints can reduce payload size
-* Caching: Persist cache in IndexedDB to minimize requests cross sessions
-* External 3D visualizations: Fully unload when not needed and avoid CSS wrappers that hurt performance (transforms, filters, opacity, overflow)
+* **Large datasets**: Use pagination and a robust URL structure. GraphQL or targeted endpoints can reduce payload size.
+* **Caching**: Persist cache in IndexedDB to minimize requests cross sessions and reduce memory usage.
+* **External 3D visualizations**: Fully unload when not needed and avoid CSS wrappers that hurt performance (transforms, filters, opacity, overflow).
 
+### Accessibility and usability
 
-## Accessibility and usability
+Accessibility is essential for operators under stress, where cognition and attention are reduced. Things to keep in mind:
 
-* Confirm critical actions and allow cancellation
-* Show progress for long-running tasks
-* Accessibility is essential for operators under stress, where cognition and attention are reduced
+* Follow WCAG standards.
+* Confirm critical actions and allow cancellation.
+* Show progress for long-running tasks.
+* Working conditions may be suboptimal. High contrast, legible typography, scalable text.
+* Consider implementing "simple mode" / "advanced mode" for certain features.
 
-## Feature flags
+### Feature flags
+
+Can simplify and speed up development:
+
+* The main branch can be updated frequently with unfinished features.
+* Continuous deployment while testing and iterating on new features in production.
 
 Options include:
 
-* External services (e.g., [Unleash](https://www.getunleash.io), [Flags SDK](https://flags-sdk.dev)
-) with caching for resilience
-* In-code flags (requires redeploy)
-* User opt-in/out (e.g. for beta features)
+* **External services** with caching for resilience. For example [Unleash](https://www.getunleash.io) or [Flags SDK](https://flags-sdk.dev).
+* **An internal service** with an admin interface.
+* **In-code flags** without the disadvantages of relying on outside services. Requires redeploys.
+* **User opt-in/out** for beta features (as an alternative to flags).
 
-Use feature flags sparingly to avoid complexity; pair with tracking to measure impact.
+*Notes*: Use feature flags sparingly to avoid complexity; pair with tracking to measure impact.
 Avoid nesting logic for different flags.
 
-## Real-time updates
+### Real-time updates
 
-Use React Query `streamedQuery` for live updates. Follow React best practices so only components depending on new data re-render.
-Store streamed data in IndexedDB to avoid having to refetch all chunks of data in case of a page reload.
+* Consider using React Query `streamedQuery` for live updates.
+* Store streamed data in IndexedDB to avoid having to refetch all chunks of data in case of a page reload.
+* Follow React best practices so that only components depending on new data re-render.
+* Build a robust system for handling errors and edge cases. Log errors server-side and display messages to the user.
