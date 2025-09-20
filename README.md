@@ -67,7 +67,7 @@ The monorepo setup is a good foundation for reusability (and scalability). Furth
 ### Testability
 
 * **Integration**: Playwright for end-to-end testing, with a shared [@repo/e2e-utils](packages/e2e-utils/) package for stable HTML selectors.
-* **Edge cases**: Create a small system for mocking API responses and errors. Keep it lightweight to prevent unnecessary maintenance.
+* **Edge cases**: Create a small system for mocking API responses and errors. Avoid too much hardcoded mock data to prevent unnecessary maintenance.
 * **Unit tests**: For utilities and logic. A lighter test runner will be better than Playwright for running these as a background task during development.
 
 ### Performance
