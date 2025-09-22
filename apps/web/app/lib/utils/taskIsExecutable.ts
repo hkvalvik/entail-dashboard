@@ -11,7 +11,7 @@ export const taskIsExecutable = (task: ScheduleTask, weather: Weather) => {
   if (!minPeakPeriod || !maxPeakPeriod) return false;
 
   return conditionsAreAcceptable({
-    significantWaveHeigh: task.weatherLimits.Hs,
+    significantWaveHeight: task.weatherLimits.Hs,
     minPeakPeriod,
     maxPeakPeriod,
     waveHeight: forecast.wave_height,

@@ -1,5 +1,5 @@
 interface Options {
-  significantWaveHeigh: number;
+  significantWaveHeight: number;
   minPeakPeriod: number;
   maxPeakPeriod: number;
   waveHeight: number;
@@ -7,13 +7,13 @@ interface Options {
 }
 
 export const conditionsAreAcceptable = ({
-  significantWaveHeigh,
+  significantWaveHeight,
   minPeakPeriod,
   maxPeakPeriod,
   waveHeight,
   wavePeriod,
 }: Options) => {
-  const heightIsAcceptable = waveHeight <= significantWaveHeigh;
+  const heightIsAcceptable = waveHeight <= significantWaveHeight;
 
   const periodIsAcceptable =
     wavePeriod >= minPeakPeriod && wavePeriod <= maxPeakPeriod;
